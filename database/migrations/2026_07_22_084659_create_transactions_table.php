@@ -29,7 +29,7 @@ return new class extends Migration
               ->cascadeOnDelete();
 
         $table->foreignId('mechanic_id')
-              ->constrained()
+              ->constrained('users')
               ->cascadeOnDelete();
 
         $table->decimal('total_price', 12, 2);
