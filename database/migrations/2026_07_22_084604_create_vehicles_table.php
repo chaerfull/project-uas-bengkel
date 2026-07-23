@@ -19,7 +19,7 @@ return new class extends Migration
               ->cascadeOnDelete();
 
         $table->string('plate_number')->unique();
-        $table->string('model');
+        $table->string('brand_model');
 
         $table->timestamps();
     });
