@@ -112,6 +112,20 @@
                             <td class="p-4 text-right text-slate-600">Rp {{ number_format($detail->product->price ?? 0, 0, ',', '.') }}</td>
                             <td class="p-4 text-center font-bold text-slate-800">{{ $detail->quantity }}</td>
                             <td class="p-4 text-right pr-6 font-bold text-slate-900">Rp {{ number_format($detail->subtotal, 0, ',', '.') }}</td>
+                            <!-- TOMBOL BATAL (Wajib sejajar sebagai kolom ke-5) -->
+                            <td class="p-4 text-center print:hidden">
+                                @if($transaction->status != 'completed')
+                                    <form action="{{ route('cashier.detail.delete', $detail->id) }}" method="POST" onsubmit="return confirm('Batalkan item ini?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="text-red-500 hover:text-red-700 bg-red-50 hover:bg-red-100 font-bold px-2.5 py-1 rounded-lg text-xs transition">
+                                            ✕ Batal
+                                        </button>
+                                    </form>
+                                @else
+                                    <span class="text-xs text-slate-400 italic">Dikunci</span>
+                                @endif
+                            </td>
                         </tr>
                     @empty
                         <tr>

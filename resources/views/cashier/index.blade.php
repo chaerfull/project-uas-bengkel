@@ -13,6 +13,11 @@
         </h1>
         <p class="text-slate-500 text-sm mt-1">Kelola antrean masuk, penunjukan mekanik, dan nota transaksi.</p>
     </div>
+    <!-- Tombol Transaksi Walk-In (Kanan - Berbentuk Tombol Rapi) -->
+    <a href="{{ route('cashier.createWalkIn') }}" class="inline-flex items-center justify-center px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium text-sm rounded-xl shadow-sm hover:shadow transition-all gap-2 cursor-pointer">
+        <i class="fa-solid fa-plus text-xs"></i>
+        <span>Transaksi Ditempat</span>
+    </a>
 </div>
 
 <!-- Kartu Ringkasan (Stats) -->
