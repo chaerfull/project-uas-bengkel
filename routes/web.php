@@ -3,7 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CashierController;
-
+use App\Http\Controllers\MechanicController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -28,6 +28,13 @@ Route::middleware(['auth'])->prefix('cashier')->group(function () {
     Route::delete('/detail/delete/{id}', [CashierController::class, 'deleteDetail'])->name('cashier.detail.delete');
     Route::get('/invoice/print/{id}', [CashierController::class, 'printInvoice'])->name('cashier.invoice.print');
     Route::get('/cashier/print/{id}', [CashierController::class, 'printInvoice'])->name('cashier.print');
+    Route::get('/walk-in', [CashierController::class, 'createWalkIn'])->name('cashier.createWalkIn');
+    Route::post('/walk-in', [CashierController::class, 'storeWalkIn'])->name('cashier.storeWalkIn');
+});
+
+Route::middleware(['auth'])->prefix('mechanic')->name('mechanic.')->group(function () {
+    Route::get('/dashboard', [MechanicController::class, 'index'])->name('index');
+    Route::patch('/tasks/{id}/status', [MechanicController::class, 'updateStatus'])->name('updateStatus');
 });
 
 require __DIR__.'/auth.php';
