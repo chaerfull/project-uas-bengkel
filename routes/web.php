@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CashierController;
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -15,6 +17,17 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+Route::middleware(['auth'])->prefix('cashier')->group(function () {
+    Route::get('/', [CashierController::class, 'index'])->name('cashier.index');
+    Route::post('/assign/{id}', [CashierController::class, 'assignMechanic'])->name('cashier.assign');
+    Route::get('/payment/{id}', [CashierController::class, 'showPaymentForm'])->name('cashier.payment');
+    Route::post('/detail/add/{id}', [CashierController::class, 'addDetail'])->name('cashier.detail.add');
+    Route::post('/complete/{id}', [CashierController::class, 'completeTransaction'])->name('cashier.complete');
+    Route::delete('/detail/delete/{id}', [CashierController::class, 'deleteDetail'])->name('cashier.detail.delete');
+    Route::get('/invoice/print/{id}', [CashierController::class, 'printInvoice'])->name('cashier.invoice.print');
+    Route::get('/cashier/print/{id}', [CashierController::class, 'printInvoice'])->name('cashier.print');
 });
 
 require __DIR__.'/auth.php';
