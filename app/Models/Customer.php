@@ -2,18 +2,25 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Attributes\Fillable;
-use Illuminate\Database\Eloquent\Attributes\Hidden;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
 
-// Menggunakan gaya modern PHP Attributes Laravel 11
-#[Fillable(['name', 'email', 'password', 'phone'])]
-#[Hidden(['password', 'remember_token'])]
-class Customer extends Authenticatable
+class Customer extends Model
 {
-    use Notifiable;
+    use HasFactory;
+
+    protected $fillable = [
+        'name',
+        'email',
+        'password',
+        'phone',
+    ];
+
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
 
     public function vehicles(): HasMany
     {

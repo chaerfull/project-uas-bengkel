@@ -4,6 +4,8 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CashierController;
 use App\Http\Controllers\MechanicController;
+use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\VehicleController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -14,6 +16,14 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
+
+    // CRUD Pelanggan
+    Route::resource('customers', CustomerController::class);
+
+    // CRUD Kendaraan
+    Route::resource('vehicles', VehicleController::class);
+
+    // Profile
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -33,8 +43,8 @@ Route::middleware(['auth'])->prefix('cashier')->group(function () {
 });
 
 Route::middleware(['auth'])->prefix('mechanic')->name('mechanic.')->group(function () {
-    Route::get('/dashboard', [MechanicController::class, 'index'])->name('index');
-    Route::patch('/tasks/{id}/status', [MechanicController::class, 'updateStatus'])->name('updateStatus');
+    Route::get('/dashboard', [MechanicController::class, 'index'])->name('mechanic.index');
+    Route::patch('/tasks/{id}/status', [MechanicController::class, 'updateStatus'])->name('mechanic.updateStatus');
 });
 
 require __DIR__.'/auth.php';
