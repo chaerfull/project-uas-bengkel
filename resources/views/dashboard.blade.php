@@ -14,4 +14,20 @@
             </div>
         </div>
     </div>
+
+@if(auth()->user()->role == 'admin')
+    <!-- Card Statistik Admin Milikmu -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-6">
+        <div class="bg-white p-6 rounded-lg shadow border-l-4 border-green-500">
+            <div class="text-sm font-medium text-gray-500">Total Pendapatan</div>
+            <div class="text-2xl font-bold">Rp {{ number_format($totalPendapatan ?? 0, 0, ',', '.') }}</div>
+        </div>
+
+        <div class="bg-white p-6 rounded-lg shadow border-l-4 border-blue-500">
+            <div class="text-sm font-medium text-gray-500">Transaksi Hari Ini</div>
+            <div class="text-2xl font-bold">{{ $transaksiHariIni ?? 0 }} Transaksi</div>
+        </div>
+    </div>
+@endif
+
 </x-app-layout>
