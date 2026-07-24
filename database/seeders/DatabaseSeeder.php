@@ -6,6 +6,7 @@ use App\Models\Role;
 use App\Models\User;
 use App\Models\Customer;
 use App\Models\Product;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\Vehicle;     // 1. Import model Vehicle
 use App\Models\Transaction; // 2. Import model Transaction
 use Illuminate\Database\Seeder;
@@ -15,6 +16,7 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
+        
         // 1. ISI TABEL ROLES TERLEBIH DAHULU
         $adminRole    = Role::create(['name' => 'admin']);
         $kasirRole    = Role::create(['name' => 'kasir']);

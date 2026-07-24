@@ -37,6 +37,15 @@
                     </div>
                 </div>
 
+                @if(auth()->check() && (auth()->user()->role_id == 1 || (auth()->user()->role && auth()->user()->role->name == 'admin')))
+                    <nav class="hidden md:flex items-center gap-6 mt-1">
+                        <a href="{{ route('dashboard') }}" class="text-sm font-medium text-slate-300 hover:text-white transition">Dashboard</a>
+                        <a href="{{ route('workers.index') }}" class="text-sm font-medium text-slate-300 hover:text-white transition">Workers</a>
+                        <a href="{{ route('products.index') }}" class="text-sm font-medium text-slate-300 hover:text-white transition">Products</a>
+                    </nav>
+                    @endif
+                </div>
+
                 <!-- Profile & Logout Status -->
                 <div class="flex items-center gap-4">
                     <div class="text-right hidden sm:block">
