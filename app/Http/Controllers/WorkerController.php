@@ -10,8 +10,8 @@ class WorkerController extends Controller
 {
     public function index()
     {
-        // Mengambil hanya user ber-role kasir & mechanic
-        $workers = User::whereIn('role', ['kasir', 'mechanic'])->get();
+        // Mengambil hanya user ber-role kasir (2) & mechanic (3)
+        $workers = User::whereIn('role_id', [2, 3])->get();
         return view('workers.index', compact('workers'));
     }
 
@@ -26,14 +26,14 @@ class WorkerController extends Controller
             'name'     => 'required|string|max:255',
             'email'    => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8',
-            'role'     => 'required|in:kasir,mechanic',
+            'role_id'  => 'required|in:1,2,3', // <-- Diganti jadi role_id dan angka
         ]);
 
         User::create([
             'name'     => $request->name,
             'email'    => $request->email,
             'password' => Hash::make($request->password),
-            'role'     => $request->role,
+            'role_id'  => $request->role_id, // <-- Diganti jadi role_id
         ]);
 
         return redirect()->route('workers.index')->with('success', 'Pekerja berhasil ditambahkan!');
@@ -50,16 +50,22 @@ class WorkerController extends Controller
         $worker = User::findOrFail($id);
 
         $request->validate([
-            'name'  => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,' . $id,
-            'role'  => 'required|in:kasir,mechanic',
+            'name'    => 'required|string|max:255',
+            'email'   => 'required|string|email|max:255|unique:users,email,' . $id,
+            'role_id' => 'required|in:1,2,3', // <-- Diganti jadi role_id dan angka
         ]);
 
-        $worker->update([
-            'name'  => $request->name,
-            'email' => $request->email,
-            'role'  => $request->role,
-        ]);
+        // Update data dasar
+        $worker->name = $request->name;
+        $worker->email = $request->email;
+        $worker->role_id = $request->role_id; // <-- Diganti jadi role_id
+
+        // Jika form password diisi, maka password akan ikut diubah
+        if ($request->filled('password')) {
+            $worker->password = Hash::make($request->password);
+        }
+
+        $worker->save();
 
         return redirect()->route('workers.index')->with('success', 'Data pekerja berhasil diperbarui!');
     }

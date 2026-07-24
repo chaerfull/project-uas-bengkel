@@ -9,7 +9,8 @@ class ProductController extends Controller
 {
     public function index()
     {
-        $products = Product::all();
+        // Mengambil semua data produk, diurutkan dari yang terbaru ditambahkan
+        $products = Product::orderBy('created_at', 'desc')->get();
         return view('products.index', compact('products'));
     }
 
@@ -20,16 +21,24 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
+        // 1. Validasi input dari form
         $request->validate([
             'name'        => 'required|string|max:255',
             'price'       => 'required|numeric|min:0',
-            'stock'       => 'required|integer|min:0',
+            'stock'       => 'required|numeric|min:0',
             'description' => 'nullable|string',
         ]);
 
-        Product::create($request->all());
+        // 2. Simpan data ke database
+        Product::create([
+            'name'        => $request->name,
+            'price'       => $request->price,
+            'stock'       => $request->stock,
+            'description' => $request->description,
+        ]);
 
-        return redirect()->route('products.index')->with('success', 'Produk/Jasa berhasil ditambahkan!');
+        // 3. Kembali ke halaman tabel bawa pesan sukses
+        return redirect()->route('products.index')->with('success', 'Data produk / jasa berhasil ditambahkan!');
     }
 
     public function edit($id)
@@ -40,22 +49,28 @@ class ProductController extends Controller
 
     public function update(Request $request, $id)
     {
+        $product = Product::findOrFail($id);
+
         $request->validate([
             'name'        => 'required|string|max:255',
             'price'       => 'required|numeric|min:0',
-            'stock'       => 'required|integer|min:0',
+            'stock'       => 'required|numeric|min:0',
             'description' => 'nullable|string',
         ]);
 
-        $product = Product::findOrFail($id);
-        $product->update($request->all());
+        $product->update([
+            'name'        => $request->name,
+            'price'       => $request->price,
+            'stock'       => $request->stock,
+            'description' => $request->description,
+        ]);
 
-        return redirect()->route('products.index')->with('success', 'Produk/Jasa berhasil diperbarui!');
+        return redirect()->route('products.index')->with('success', 'Data produk / jasa berhasil diperbarui!');
     }
 
     public function destroy($id)
     {
         Product::findOrFail($id)->delete();
-        return redirect()->route('products.index')->with('success', 'Produk/Jasa berhasil dihapus!');
+        return redirect()->route('products.index')->with('success', 'Data produk / jasa berhasil dihapus!');
     }
 }

@@ -12,21 +12,22 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
+// Middleware Auth Umum (Profile & Dashboard)
 Route::middleware('auth')->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+// Middleware Auth untuk Admin (Workers & Products)
 Route::middleware(['auth'])->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::resource('/workers', WorkerController::class);
     Route::put('/workers/{id}/reset-password', [WorkerController::class, 'resetPassword'])->name('workers.reset-password');
     Route::resource('/products', ProductController::class);
+});
+
+// Middleware Auth untuk Kasir (Milik Fahri)
 Route::middleware(['auth'])->prefix('cashier')->group(function () {
     Route::get('/', [CashierController::class, 'index'])->name('cashier.index');
     Route::post('/assign/{id}', [CashierController::class, 'assignMechanic'])->name('cashier.assign');
@@ -40,10 +41,10 @@ Route::middleware(['auth'])->prefix('cashier')->group(function () {
     Route::post('/walk-in', [CashierController::class, 'storeWalkIn'])->name('cashier.storeWalkIn');
 });
 
+// Middleware Auth untuk Mekanik (Milik Fahri)
 Route::middleware(['auth'])->prefix('mechanic')->name('mechanic.')->group(function () {
     Route::get('/dashboard', [MechanicController::class, 'index'])->name('index');
     Route::patch('/tasks/{id}/status', [MechanicController::class, 'updateStatus'])->name('updateStatus');
 });
 
 require __DIR__.'/auth.php';
-});
