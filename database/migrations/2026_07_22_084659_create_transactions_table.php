@@ -13,36 +13,29 @@ return new class extends Migration
 {
     Schema::create('transactions', function (Blueprint $table) {
         $table->id();
-
         $table->string('invoice_number')->unique();
 
-        $table->foreignId('customer_id')
-              ->constrained()
-              ->cascadeOnDelete();
+        $table->foreignId('customer_id')->constrained()->cascadeOnDelete();
+        $table->foreignId('vehicle_id')->constrained()->cascadeOnDelete();
 
-        $table->foreignId('vehicle_id')
-              ->constrained()
-              ->cascadeOnDelete();
+        $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete();
+        $table->foreignId('mechanic_id')->nullable()->constrained('users')->nullOnDelete();
 
-        $table->foreignId('user_id')
-              ->constrained()
-              ->cascadeOnDelete();
+        $table->decimal('total_price', 12, 2)->default(0);
 
-        $table->foreignId('mechanic_id')
-              ->constrained('users')
-              ->cascadeOnDelete();
-
-        $table->decimal('total_price', 12, 2);
+        $table->enum('type', ['booking', 'walk-in'])->default('booking');
+        $table->date('booking_date')->nullable();
 
         $table->enum('status', [
-            'pending',
-            'process',
-            'finished',
-            'cancelled'
+            'pending',      // Menunggu antrean
+            'in_progress',  // Sedang diperbaiki mekanik
+            'completed',    // Selesai & sudah bayar
+            'cancelled'     // Dibatalkan
         ])->default('pending');
 
         $table->timestamps();
     });
+
 }
 
     /**
