@@ -69,4 +69,40 @@ class VehicleController extends Controller
         return redirect()->route('vehicles.index')
             ->with('success', 'Kendaraan berhasil dihapus.');
     }
+    // ==========================
+    // CUSTOMER PORTAL
+    // ==========================
+
+    public function customerIndex()
+    {
+        $vehicles = Vehicle::where(
+            'customer_id',
+            auth('customer')->id()
+        )->latest()->get();
+
+        return view('customer.vehicles.index', compact('vehicles'));
+    }
+
+    public function customerCreate()
+    {
+        return view('customer.vehicles.create');
+    }
+
+    public function customerStore(Request $request)
+    {
+        $request->validate([
+            'plate_number' => 'required|unique:vehicles,plate_number',
+            'brand_model'  => 'required|max:255',
+        ]);
+
+        Vehicle::create([
+            'customer_id' => auth('customer')->id(),
+            'plate_number' => $request->plate_number,
+            'brand_model' => $request->brand_model,
+        ]);
+
+        return redirect()
+            ->route('customer.vehicles.index')
+            ->with('success', 'Kendaraan berhasil ditambahkan.');
+    }
 }
